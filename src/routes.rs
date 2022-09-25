@@ -9,7 +9,7 @@ pub struct CustomerListResponse {
 }
 
 #[get("/customers")]
-pub async fn list() -> Json<CustomerListResponse> {
+pub async fn list_customers() -> Json<CustomerListResponse> {
     let db = init_db();
     let customers = db.lock().await;
     Json(CustomerListResponse { customers: customers.to_vec() })

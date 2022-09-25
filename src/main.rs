@@ -13,7 +13,7 @@ mod routes;
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let _rocket = rocket::build()
-        .mount("/", routes![routes::list])
+        .mount("/", routes![routes::list_customers])
         .ignite().await?
         .launch().await?;
 
