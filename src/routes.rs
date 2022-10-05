@@ -21,7 +21,7 @@ pub async fn list_customers() -> Json<CustomerListResponse> {
 }
 
 #[get("/customer/<guid>")]
-pub async fn get_customer(guid: String) -> Result<Json<CustomerResponse>, status::NotFound<String>> {
+pub async fn list_customer(guid: String) -> Result<Json<CustomerResponse>, status::NotFound<String>> {
     let db = init_db();
     let customers = db.lock().await;
     for customer in customers.to_vec() {

@@ -13,7 +13,8 @@ mod routes;
  use rocket::*;
 
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", routes![routes::list_customers, routes::get_customer])
+    rocket::build().mount("/", routes![routes::list_customers, 
+                                       routes::list_customer])
 }
 
 #[rocket::main]
