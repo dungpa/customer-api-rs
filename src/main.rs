@@ -14,7 +14,7 @@ mod routes;
 
 fn rocket() -> Rocket<Build> {
     rocket::build().mount("/", routes![routes::list_customers, 
-                                       routes::list_customer])
+                                       routes::list_customer, routes::delete_customer])
 }
 
 #[rocket::main]
@@ -50,6 +50,20 @@ mod test {
     fn get_customer_returns_correct_results_on_unknown_id() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
         let response = client.get(uri!("/customer/123")).dispatch();
+        assert_eq!(response.status(), Status::NotFound);
+    }
+
+    #[test]
+    fn delete_customer_returns_correct_results_on_known_id() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let response = client.delete(uri!("/customer/4622d0f0-aad4-4c10-a6df-415232141866")).dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn delete_customer_returns_correct_results_on_unknown_id() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let response = client.delete(uri!("/customer/123")).dispatch();
         assert_eq!(response.status(), Status::NotFound);
     }
 }
