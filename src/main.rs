@@ -57,6 +57,22 @@ mod test {
     }
 
     #[test]
+    fn add_existing_customer_returns_correct_results() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let message = Customer {
+            guid: "4622d0f0-aad4-4c10-a6df-415232141866".to_owned(),
+            first_name: "John".to_owned(),
+            last_name: "Doe".to_owned(),
+            email: "John@Doe.com".to_owned(),
+            address: "US".to_owned()
+        };
+        let response = client.post(uri!("/customers"))
+                             .json(&message)
+                             .dispatch();
+        assert_eq!(response.status(), Status::BadRequest);
+    }
+
+    #[test]
     fn get_customer_returns_correct_results_on_known_id() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
         let response = client.get(uri!("/customer/4622d0f0-aad4-4c10-a6df-415232141866")).dispatch();
