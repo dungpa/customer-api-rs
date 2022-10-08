@@ -1,6 +1,7 @@
 use crate::models::*;
 use crate::db::*;
 use rocket::response::status;
+use rocket::http::Status;
 use rocket::serde::json::*;
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -18,6 +19,19 @@ pub async fn list_customers() -> Json<CustomerListResponse> {
     let db = init_db();
     let customers = db.lock().await;
     Json(CustomerListResponse { customers: customers.to_vec() })
+}
+
+#[post("/customers", format = "json", data = "<cj>")]
+pub async fn add_customer(cj: Json<Customer>) -> Status {
+    let db = init_db();
+    let customers = db.lock().await;
+    let c = cj.into_inner();
+    for customer in customers.to_vec() {
+        if customer.guid == c.guid {
+            return Status::BadRequest
+        }
+    }
+    Status::Ok
 }
 
 #[get("/customer/<guid>")]
