@@ -28,11 +28,10 @@ async fn main() -> Result<(), rocket::Error> {
 
 #[cfg(test)]
 mod test {
+    use crate::models::*;
     use super::rocket;
     use rocket::local::blocking::Client;
     use rocket::http::Status;
-    use rocket::http::ContentType;
-    use crate::models::*;
 
     #[test]
     fn list_customers_returns_correct_results() {
@@ -52,7 +51,6 @@ mod test {
             address: "US".to_owned()
         };
         let response = client.post(uri!("/customers"))
-                             .header(ContentType::JSON)
                              .json(&message)
                              .dispatch();
         assert_eq!(response.status(), Status::Ok);
