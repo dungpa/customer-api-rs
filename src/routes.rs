@@ -21,13 +21,13 @@ pub async fn list_customers() -> Json<CustomerListResponse> {
     Json(CustomerListResponse { customers: customers.to_vec() })
 }
 
-#[post("/customers", format = "json", data = "<cj>")]
-pub async fn add_customer(cj: Json<Customer>) -> Status {
+#[post("/customers", format = "json", data = "<customer_json>")]
+pub async fn add_customer(customer_json: Json<Customer>) -> Status {
     let db = init_db();
     let customers = db.lock().await;
-    let c = cj.into_inner();
+    let new_customer = customer_json.into_inner();
     for customer in customers.to_vec() {
-        if customer.guid == c.guid {
+        if customer.guid == new_customer.guid {
             return Status::BadRequest
         }
     }
