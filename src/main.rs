@@ -9,8 +9,8 @@ extern crate serde;
 mod models;
 mod db;
 mod routes;
-
- use rocket::*;
+ 
+use rocket::*;
 
 fn rocket() -> Rocket<Build> {
     rocket::build().mount("/", routes![routes::list_customers, routes::add_customer,
@@ -31,11 +31,30 @@ mod test {
     use super::rocket;
     use rocket::local::blocking::Client;
     use rocket::http::Status;
+    use rocket::http::ContentType;
+    use crate::models::*;
 
     #[test]
     fn list_customers_returns_correct_results() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
         let response = client.get(uri!("/customers")).dispatch();
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[test]
+    fn add_new_customer_returns_correct_results() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let message = Customer {
+            guid: "3bd7d411-9621-4d5a-b533-3d64cdcf0754".to_owned(),
+            first_name: "John".to_owned(),
+            last_name: "Doe".to_owned(),
+            email: "John@Doe.com".to_owned(),
+            address: "US".to_owned()
+        };
+        let response = client.post(uri!("/customers"))
+                             .header(ContentType::JSON)
+                             .json(&message)
+                             .dispatch();
         assert_eq!(response.status(), Status::Ok);
     }
 
