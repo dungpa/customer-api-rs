@@ -31,6 +31,7 @@ pub async fn add_customer(customer_json: Json<Customer>) -> Status {
             return Status::BadRequest
         }
     }
+    // NOTE: we should have updated the database here.
     Status::Ok
 }
 
